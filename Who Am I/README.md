@@ -4,7 +4,7 @@ As part of the ICSD 2024 conference, we had the privilege of hosting the Capture
 
 A total of 20 teams, each consisting of 2-3 participants, competed for a prize pool of 9,000 AZN, with 5,000 AZN awarded to the first-place team, 3,000 AZN to the second, and 1,000 AZN to the third. The competition took place on September 20th, running from 08:30 to 14:15, lasting nearly six hours.
 
-Boşver emerged as the winner, scoring 1,080 out of a possible 2,100 points. BHOSploit claimed second place with 1,030 points, and Kabiner secured third place with 800 points.
+_Boşver_ emerged as the winner, scoring 1,080 out of a possible 2,100 points. _BHOSploit_ claimed second place with 1,030 points, and _Kabiner_ secured third place with 800 points.
 
 In this repository, we will share all the challenges used during the competition, along with what we consider to be the correct solutions. Additionally, we will provide statistics on the competitors, teams, and individual questions.
 
@@ -31,12 +31,15 @@ Challenges covered various aspects of cybersecurity such as Cryptograhy, OSINT, 
 | **C12: Mr. Windoclin**            | Hard       | 300             | 2              | 150, 150                          | Vulnerability Exploitation, Docker Escape |
 | **Total**                     |            | **2000**        | **31**         |                                   |                                           |
 
+> [!NOTE]  
+> Some challenges may have included references to films or anime shows, but none required knowledge of them to be solved.
+
 ## Standings
 
 > [!IMPORTANT]  
 > All flag submission attempts (whether correct or incorrect) have been logged and are available in 'ctf_submission_logs.csv' file. 
 
-| N#  | Team Name    | C1  | C2  | C3  | C4            | C5               | C6  | C7  | C8  | C9  | C10       | C11 | C12 | Score | Extra | Total |
+| N%  | Team    | C1  | C2  | C3  | C4            | C5               | C6  | C7  | C8  | C9  | C10       | C11 | C12 | Score | Extra | Total |
 | :---: | :---:      | :---: | :---: | :---: | :---:          | :---:             | :---: | :---: | :---: | :---: | :---:     | :---: | :---: | :---: | :---: | :---: |
 | 1   | boşver      | 100 | -   | 100 | 125            | 125               | 130 | 150 | -   | -   | -         | 250  | -    | 980   | 100   | 1080  |
 | 2   | BHOSsploit  | 100 | 100 | 100 | 125            | 125               | 130 | -   | -   | -   | -         | 100  | 150  | 930   | 100   | 1030  |
@@ -64,3 +67,20 @@ Challenges covered various aspects of cybersecurity such as Cryptograhy, OSINT, 
 
 ## Some pictures from the competition
 
+![image](./images/File 1.jpg)
+![image](./Images/File 3.jpg)
+![image](./Images/File 24.jpg)
+![image](./Images/File 20.jpg)
+
+![image](./Images/File 348.jpg)
+![image](./Images/File 345.jpg)
+![image](./Images/File 343.jpg)
+
+![image](./Images/File 352.jpg)
+![image](./Images/File 351.jpg)
+
+![image](./Images/File 35.jpg)
+![image](./Images/File 36.jpg)
+![image](./Images/File 31.jpg)
+![image](./Images/File 27.jpg)
+![image](./Images/File 2.jpg)
