@@ -64,25 +64,3 @@ Challenges covered various aspects of cybersecurity such as Cryptograhy, OSINT, 
 
 > [!NOTE]  
 > Extra 100 points are awarded for filling a form about PROCYBERLAB platform.
-
-## Some pictures from the competition
-### CTF hall
-![image](./images/File%201.jpg)
-![image](./Images/File%203.jpg)
-![image](./Images/File%2024.jpg)
-![image](./Images/File%2020.jpg)
-
-![image](./Images/File%2035.jpg)
-![image](./Images/File%2036.jpg)
-![image](./Images/File%2031.jpg)
-![image](./Images/File%2027.jpg)
-![image](./Images/File%202.jpg)
-
-### Winners
-![image](./Images/File%20348.jpg)
-![image](./Images/File%20345.jpg)
-![image](./Images/File%20343.jpg)
-
-### All competitors
-![image](./Images/File%20352.jpg)
-![image](./Images/File%20351.jpg)
